@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    external-dns.alpha.kubernetes.io/hostname: "" # Populate with the subdomain.
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    certmanager.k8s.io/issuer: "letsencrypt-prod"
+    certmanager.k8s.io/acme-challenge-type: dns01
+    certmanager.k8s.io/acme-dns01-provider: vultr
+  name: nginx-ingress
+spec:
+  rules:
+  - host: "" # Populate with the subdomain.
+    http:
+      paths:
+      - backend:
+          service:
+            name: nginx-svc
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - "" # Populate with the subdomain.
+    secretName: wildcard-tls
